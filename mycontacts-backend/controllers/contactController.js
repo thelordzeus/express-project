@@ -15,4 +15,4 @@ const updateContact = (req, res) => {
   res.status(200).json({ message: `Update contact for ${req.params.id}` });
 };
 
-module.exports = { getContacts, createContact, getContact };
+module.exports = { getContacts, createContact, getContact, updateContact };
