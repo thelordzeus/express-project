@@ -9,7 +9,12 @@ const getContact = (req, res) => {
   res.status(200).json({ message: `Get Contact for ${req.params.id}` });
 };
 const createContact = (req, res) => {
-  console.log("The request bodt is", req.body);
+  console.log("The request body is", req.body);
+  const { name, email, phone, type } = req.body;
+  if (!name || !email || !phone) {
+    res.status(400);
+    throw new Error("all fields are required");
+  }
   res.status(201).json({ message: "Get all contacts" });
 };
 const updateContact = (req, res) => {
