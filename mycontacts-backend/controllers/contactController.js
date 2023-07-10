@@ -2,13 +2,15 @@
 //@route GET /api/contacts
 //@access Public
 
-const getContacts = (req, res) => {
+const asyncHandler = require("express-async-handler"); // used to handle async errors, no need to use try catch block
+
+const getContacts = asyncHandler((req, res) => {
   res.status(200).json({ message: "Get all contacts" });
-};
-const getContact = (req, res) => {
+});
+const getContact = asyncHandler((req, res) => {
   res.status(200).json({ message: `Get Contact for ${req.params.id}` });
-};
-const createContact = (req, res) => {
+});
+const createContact = asyncHandler((req, res) => {
   console.log("The request body is", req.body);
   const { name, email, phone, type } = req.body;
   if (!name || !email || !phone) {
@@ -16,14 +18,14 @@ const createContact = (req, res) => {
     throw new Error("all fields are required");
   }
   res.status(201).json({ message: "Get all contacts" });
-};
-const updateContact = (req, res) => {
+});
+const updateContact = asyncHandler((req, res) => {
   res.status(200).json({ message: `Update contact for ${req.params.id}` });
-};
+});
 
-const deleteContact = (req, res) => {
+const deleteContact = asyncHandler((req, res) => {
   res.status(200).json({ message: `Delete contact for ${req.params.id}` });
-};
+});
 
 module.exports = {
   getContacts,
