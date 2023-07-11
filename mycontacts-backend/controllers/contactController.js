@@ -51,13 +51,12 @@ const updateContact = asyncHandler(async (req, res) => {
 
 const deleteContact = asyncHandler(async (req, res) => {
   const Contact = await Contact.findById(req.params.id);
-  console.log(Contact);
   if (!Contact) {
     res.status(404);
     throw new Error("Contact not found");
   }
 
-  await Contact.remove();
+  await Contact.deleteOne();
   res.status(200).json(Contact);
 });
 
