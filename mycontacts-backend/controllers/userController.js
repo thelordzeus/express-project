@@ -1,23 +1,28 @@
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const User = require("../models/userModal");
+const jwt = require("jsonwebtoken");
 
 const registerUser = asyncHandler(async (req, res) => {
+  // checking if all the fields are available
   const { userName, email, password } = req.body;
   if (!userName || !email || !password) {
     res.status(400);
     throw new Error("All fields are required");
   }
+
+  // checking if user is already available
   const userAvailable = await User.findOne({ email });
   if (userAvailable) {
     res.status(400);
     throw new Error("User already exists");
   }
 
-  // hash password
+  // hashing the password
   const hashedPassword = await bcrypt.hash(password, 10);
   console.log("The hashed password: ", hashedPassword);
 
+  // Storing the user into the mongo
   const user = await User.create({
     userName,
     email,
