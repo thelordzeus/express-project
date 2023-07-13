@@ -23,7 +23,15 @@ const registerUser = asyncHandler(async (req, res) => {
     email,
     password: hashedPassword, // storing the hashed password onto the mongo
   });
-  res.status(201).json(user);
+  console.log(`User is Created ${user}`);
+  if (user) {
+    res
+      .status(201)
+      .json({ _id: user._id, userName: user.userName, email: user.email });
+  } else {
+    res.status(400);
+    throw new Error("Invalid user data");
+  }
 });
 
 const loginUser = asyncHandler(async (req, res) => {
