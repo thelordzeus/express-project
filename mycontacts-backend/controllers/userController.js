@@ -16,7 +16,14 @@ const registerUser = asyncHandler(async (req, res) => {
 
   // hash password
   const hashedPassword = await bcrypt.hash(password, 10);
-  res.json({ message: "Register the user" });
+  console.log("The hashed password: ", hashedPassword);
+
+  const user = await User.create({
+    userName,
+    email,
+    password: hashedPassword, // storing the hashed password onto the mongo
+  });
+  res.status(201).json(user);
 });
 
 const loginUser = asyncHandler(async (req, res) => {
