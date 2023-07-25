@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const User = require("../models/userModal");
 const jwt = require("jsonwebtoken");
+const secretToken = process.env.ACCESS_TOKEN_SECRET;
 
 const registerUser = asyncHandler(async (req, res) => {
   // checking if all the fields are available
@@ -40,18 +41,36 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 const loginUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = req.body; // fetching email and password
   if (!email || !password) {
     res.status(400);
     throw new Error("All fields are required");
   }
-
+  // checking if user is already available
   const user = await User.findOne({ email });
+  // compare password with hashed password
 
-  res.json({ message: "login the user" });
+  if (user && (await bcrypt.compare(password, user.password))) {
+    // the payload we are giving to the JWT
+    const accessToken = jwt.sign(
+      {
+        user: {
+          userName: user.userName,
+          email: user.email,
+          _id: user._id,
+        },
+      },
+      secretToken,
+      { expiresIn: "15m" }
+    );
+    res.status(200).json({ accessToken });
+  } else {
+    res.status(401);
+    throw new Error("Invalid email or password");
+  }
 });
 
 const currentUser = asyncHandler(async (req, res) => {
-  res.json({ message: "Current user information" });
+  res.json(req.user);
 });
 module.exports = { registerUser, loginUser, currentUser };

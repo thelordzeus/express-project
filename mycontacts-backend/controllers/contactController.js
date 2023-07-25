@@ -6,7 +6,7 @@ const asyncHandler = require("express-async-handler"); // used to handle async e
 const Contact = require("../models/contactModel");
 
 const getContacts = asyncHandler(async (req, res) => {
-  const contacts = await Contact.find({});
+  const contacts = await Contact.find({ user_id: req.user._id }); // fetch all the contacts of the logged in user only
   res.status(200).json(contacts);
 });
 
