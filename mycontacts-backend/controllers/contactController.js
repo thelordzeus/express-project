@@ -30,6 +30,7 @@ const createContact = asyncHandler(async (req, res) => {
     name,
     email,
     phone,
+    user_id: req.user._id,
   });
   res.status(201).json(conact);
 });
@@ -39,6 +40,9 @@ const updateContact = asyncHandler(async (req, res) => {
   if (!contact) {
     res.status(404);
     throw new Error("Contact not found");
+  }
+
+  if (!contact.user_id.toString() !== req.user.id) {
   }
 
   const updatedContact = await Contact.findByIdAndUpdate(
